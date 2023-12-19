@@ -5,95 +5,106 @@
     <title>¿?</title>
 
     <script>
-function reproducirVideo() {
-    var overlay = document.getElementById('overlay');
-    overlay.style.display = 'none';
-
-    var videoContainer = document.getElementById('video-container');
-    videoContainer.style.display = 'block';
-
-    // Activar el modo de pantalla completa
-    var video = document.getElementById('video');
-    if (video.requestFullscreen) {
-        video.requestFullscreen();
-    } else if (video.mozRequestFullScreen) {
-        video.mozRequestFullScreen();
-    } else if (video.webkitRequestFullscreen) {
-        video.webkitRequestFullscreen();
-    } else if (video.msRequestFullscreen) {
-        video.msRequestFullscreen();
-    }
-
-    // Mostrar el panel de administrador si la IP es válida
-    var userIP = obtenerDireccionIP();
-    if (allowedIPs.includes(userIP)) {
-        adminPanelContainer.style.display = 'block';
-    }
-
-    // Actualizar la lista de usuarios en el panel de administrador
-    var userList = document.createElement('li');
-    userList.textContent = userIP;
-    userIpList.appendChild(userList);
-}
-</script>
-
-    <script>
-    function aumentarVolumen() {
-        // Obtén el elemento de video
-        var video = document.getElementById('video');
-
-        // Aumenta el volumen (puedes ajustar el valor según tus necesidades)
-        video.volume = 0.8; // 0.8 significa el 80% de volumen
-
-        // Puedes ajustar el volumen según tus necesidades
-    }
-</script>
-    <script>
-    function reproducirVideo() {
-        var overlay = document.getElementById('overlay');
-        overlay.style.display = 'none';
-
-        var videoContainer = document.getElementById('video-container');
-        videoContainer.style.display = 'block';
-
-        // Obtén el elemento de video
-        var video = document.getElementById('video');
-
-        // Inicia la reproducción del video
-        video.play();
-
-        // Actualizar la barra de progreso mientras se reproduce el video
-        video.addEventListener('timeupdate', function () {
-            var progressBar = document.getElementById('progress-bar');
-            var percentage = (video.currentTime / video.duration) * 100;
-            progressBar.style.width = percentage + '%';
+        // Desactivar clic derecho
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
         });
 
-        // Deshabilitar la capacidad de pausar o adelantar el video
-        video.addEventListener('seeking', function () {
-            video.currentTime = video.duration * (parseFloat(progressBar.style.width) / 100);
+        // Desactivar zoom
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
         });
 
-        video.addEventListener('pause', function () {
+        document.addEventListener('dblclick', function (e) {
+            e.preventDefault();
+        });
+
+        // Desactivar inspeccionar
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+            }
+        });
+
+        function reproducirVideo() {
+            var overlay = document.getElementById('overlay');
+            overlay.style.display = 'none';
+
+            var videoContainer = document.getElementById('video-container');
+            videoContainer.style.display = 'block';
+
+            // Obtén el elemento de video
+            var video = document.getElementById('video');
+
+            // Inicia la reproducción del video
             video.play();
-        });
 
+            // Actualizar la barra de progreso mientras se reproduce el video
+            video.addEventListener('timeupdate', function () {
+                var progressBar = document.getElementById('progress-bar');
+                var percentage = (video.currentTime / video.duration) * 100;
+                progressBar.style.width = percentage + '%';
+            });
 
-        // Mostrar el panel de administrador si la IP es válida
-        var userIP = obtenerDireccionIP();
-        if (allowedIPs.includes(userIP)) {
-            adminPanelContainer.style.display = 'block';
+            // Barra que cambia de color en el borde del video cada 2 segundos
+            var progressBorder = document.getElementById('progress-border');
+            setInterval(function () {
+                var randomColor = getRandomColor();
+                progressBorder.style.borderColor = randomColor;
+            }, 2000);
+
+            // Deshabilitar la capacidad de pausar o adelantar el video
+            video.addEventListener('seeking', function () {
+                video.currentTime = video.duration * (parseFloat(progressBar.style.width) / 100);
+            });
+
+            video.addEventListener('pause', function () {
+                video.play();
+            });
         }
 
-        // Actualizar la lista de usuarios en el panel de administrador
-        var userList = document.createElement('li');
-        userList.textContent = userIP;
-        userIpList.appendChild(userList);
-    }
-</script>
+        function mostrarCreditos() {
+            var creditsPanel = document.getElementById('credits-panel');
+            creditsPanel.style.display = 'block';
+        }
 
+        function toggleCreditsPanel() {
+            var creditsPanel = document.getElementById('credits-panel');
+            creditsPanel.style.display = (creditsPanel.style.display === 'none') ? 'block' : 'none';
+        }
+
+        function cambiarBorde() {
+            // Barra que cambia de color en el borde del video cada 2 segundos
+            var progressBorder = document.getElementById('progress-border');
+            setInterval(function () {
+                var randomColor = getRandomColor();
+                progressBorder.style.borderColor = randomColor;
+            }, 2000);
+        }
+
+        function getRandomColor() {
+            var colors = ['#FFFF00', '#0000FF', '#800080', '#FF00FF', '#008000'];
+            var randomIndex = Math.floor(Math.random() * colors.length);
+            return colors[randomIndex];
+        }
+
+        function openCongaPage() {
+            window.open('https://matias.ma/nsfw/', '_blank');
+        }
+
+        function openRickTrollPage() {
+            window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+        }
+
+        function openPikaPage() {
+            window.open('https://josepepe2023.github.io/-/', '_blank');
+        }
+
+        window.onload = cambiarBorde;
+    </script>
 
     <style>
+        /* Estilos CSS aquí... */
         body {
             margin: 0;
             overflow: hidden;
@@ -151,65 +162,28 @@ function reproducirVideo() {
             position: fixed;
             bottom: 0;
             left: 0;
-            width: 0%;
-            height: 5px;
+            width: 100%;
+            height: 9px;
             background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
             transition: width 0.5s;
             z-index: 1000;
         }
 
-        #admin-button {
+        #progress-border {
             position: fixed;
-            top: 10px;
-            left: 10px;
-            background-color: black;
-            color: white;
-            font-size: 12px;
-            padding: 5px 10px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 9px;
             border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.5s;
-            z-index: 1001;
+            z-index: 999;
+            pointer-events: none;
         }
 
-        #admin-button:hover {
-            border: 2px solid #fff;
-        }
-
-        #admin-panel-container {
+        #conga-button {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-            background: black;
-            color: white;
-            font-size: 20px;
-            z-index: 1002;
-            overflow: hidden;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        #admin-panel {
-            width: 400px;
-            height: 300px;
-            overflow: hidden;
-        }
-
-        #admin-panel-header {
-            background: #333;
-            padding: 10px;
-            cursor: move;
-            user-select: none;
-        }
-
-        #admin-panel-body {
-            padding: 10px;
-            height: calc(100% - 40px);
-            overflow: auto;
-        }
-
-        #admin-panel button {
+            bottom: 10px;
+            left: 10px;
             background-color: transparent;
             color: white;
             font-size: 16px;
@@ -217,91 +191,61 @@ function reproducirVideo() {
             border: 2px solid transparent;
             cursor: pointer;
             transition: all 0.5s;
-            margin: 5px;
+            z-index: 1001;
         }
 
-        #admin-panel button:hover {
+        #conga-button:hover {
             border: 2px solid #fff;
         }
 
-        #ip-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        #user-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        #comments-container {
+        #rick-troll-button {
             position: fixed;
-            bottom: 0;
-            right: 0;
-            max-height: 50%;
-            width: 30%;
-            overflow-y: auto;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            z-index: 1003;
-            display: none; /* Comentarios ocultos por defecto */
-        }
-
-        #comments {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        #comment-form {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        #comment-form input,
-        #comment-form textarea,
-        #comment-form button {
-            margin-bottom: 5px;
-        }
-
-        #comment-form button {
-            background-color: black;
+            bottom: 10px;
+            left: calc(50% - 75px);
+            background-color: transparent;
             color: white;
             font-size: 16px;
             padding: 10px 20px;
             border: 2px solid transparent;
             cursor: pointer;
             transition: all 0.5s;
+            z-index: 1001;
         }
 
-        #comment-form button:hover {
+        #rick-troll-button:hover {
             border: 2px solid #fff;
         }
 
-        #toggle-comments-button {
-            background-color: black;
+        #pika-button {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: transparent;
             color: white;
             font-size: 16px;
             padding: 10px 20px;
             border: 2px solid transparent;
             cursor: pointer;
             transition: all 0.5s;
+            z-index: 1001;
         }
 
-        #toggle-comments-button:hover {
+        #pika-button:hover {
             border: 2px solid #fff;
         }
 
         #credits-button {
-            background-color: black;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
             color: white;
             font-size: 16px;
             padding: 10px 20px;
             border: 2px solid transparent;
             cursor: pointer;
             transition: all 0.5s;
+            z-index: 1001;
         }
 
         #credits-button:hover {
@@ -310,48 +254,31 @@ function reproducirVideo() {
 
         #credits-panel {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-            background: black;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
             color: white;
             font-size: 20px;
-            padding: 20px;
-            z-index: 1004;
-            overflow: hidden;
-            transition: transform 0.3s ease-in-out;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
+        #credits-content {
+            max-width: 80%;
+        }
+
+        /* Otros estilos CSS aquí... */
     </style>
 </head>
 <body>
 
-<button id="admin-button" onclick="toggleAdminPanel()">Admin</button>
-
 <div id="overlay">
     <button id="boton-confianza" onclick="reproducirVideo()">¿Confías en mí?</button>
-</div>
-
-<div id="admin-panel-container" onmousedown="startDragging(event)" onmouseup="stopDragging()">
-    <div id="admin-panel" draggable="true">
-        <div id="admin-panel-header">Panel de Administrador</div>
-        <div id="admin-panel-body">
-            <h2>Usuarios en la página:</h2>
-            <ul id="user-list"></ul>
-            <hr>
-            <form id="admin-form">
-                <label for="ip-address">Agregar IP:</label>
-                <input type="text" id="ip-address" placeholder="Ingrese la IP">
-                <button type="button" onclick="agregarIP()">Agregar</button>
-            </form>
-            <div>
-                <h2>Usuarios con acceso:</h2>
-                <ul id="ip-list"></ul>
-            </div>
-            <button type="button" onclick="mostrarUsuarios()">Mostrar Usuarios</button>
-        </div>
-    </div>
 </div>
 
 <div id="video-container">
@@ -359,170 +286,26 @@ function reproducirVideo() {
         <source src="https://media.publit.io/file/pikachu.mp4.mp4" type="video/mp4">
         Tu navegador no soporta el elemento de video.
     </video>
+    <div id="progress-border"></div>
+    <div id="progress-bar"></div>
 </div>
 
-<div id="progress-bar"></div>
-
-<div id="comments-container">
-    <h2>Comentarios</h2>
-    <ul id="comments"></ul>
-    <form id="comment-form">
-        <label for="comment-name">Nombre:</label>
-        <input type="text" id="comment-name" placeholder="Tu nombre">
-        <label for="comment-text">Comentario:</label>
-        <textarea id="comment-text" placeholder="Escribe tu comentario"></textarea>
-        <button type="button" onclick="publicarComentario()">Enviar</button>
-    </form>
-    <button id="toggle-comments-button" onclick="toggleComments()">Mostrar/Esconder Comentarios</button>
-</div>
+<button id="conga-button" onclick="openCongaPage()">Conga!</button>
+<button id="rick-troll-button" onclick="openRickTrollPage()">Rick Troll!</button>
+<button id="pika-button" onclick="openPikaPage()">Pika</button>
 
 <div id="credits-panel">
-    <h2>Creditos</h2>
-    <p>Todos los créditos a AndresPlay</p>
-    <p>Discord: andresplay90</p>
-    <p>Instagram: andresplay_99</p>
-    <p>Codigo By Chat GPT - 2024</p>
+    <div id="credits-content">
+        <p>Todos los créditos a Andresplay</p>
+        <p>Discord: andresplay90</p>
+        <p>Instagram: andresplay_99</p>
+        <p>Código By Chat GPT 4 - 2024</p>
+    </div>
 </div>
 
-<button id="credits-button" onclick="toggleCreditsPanel()">Créditos</button>
-
 <script>
-    var video = document.getElementById('video');
-    var botonConfianza = document.getElementById('boton-confianza');
-    var progressBar = document.getElementById('progress-bar');
-    var adminButton = document.getElementById('admin-button');
-    var adminPanelContainer = document.getElementById('admin-panel-container');
-    var adminPanel = document.getElementById('admin-panel');
-    var ipList = document.getElementById('ip-list');
-    var userIpList = document.getElementById('user-list');
-    var commentsContainer = document.getElementById('comments-container');
-    var commentForm = document.getElementById('comment-form');
-    var creditsPanel = document.getElementById('credits-panel');
-    var allowedIPs = ['191.95.134.122']; // Lista inicial de IPs autorizadas
-
-    function reproducirVideo() {
-        var overlay = document.getElementById('overlay');
-        overlay.style.display = 'none';
-
-        var videoContainer = document.getElementById('video-container');
-        videoContainer.style.display = 'block';
-
-        // Actualizar la barra de progreso mientras se reproduce el video
-        video.addEventListener('timeupdate', function () {
-            var percentage = (video.currentTime / video.duration) * 100;
-            progressBar.style.width = percentage + '%';
-        });
-
-        // Deshabilitar la capacidad de pausar o adelantar el video
-        video.addEventListener('seeking', function () {
-            video.currentTime = video.duration * (parseFloat(progressBar.style.width) / 100);
-        });
-
-        video.addEventListener('pause', function () {
-            video.play();
-        });
-
-        // Activar el modo de pantalla completa
-        if (video.requestFullscreen) {
-            video.requestFullscreen();
-        } else if (video.mozRequestFullScreen) {
-            video.mozRequestFullScreen();
-        } else if (video.webkitRequestFullscreen) {
-            video.webkitRequestFullscreen();
-        } else if (video.msRequestFullscreen) {
-            video.msRequestFullscreen();
-        }
-
-        // Mostrar el panel de administrador si la IP es válida
-        var userIP = obtenerDireccionIP();
-        if (allowedIPs.includes(userIP)) {
-            adminPanelContainer.style.display = 'block';
-        }
-
-        // Actualizar la lista de usuarios en el panel de administrador
-        var userList = document.createElement('li');
-        userList.textContent = userIP;
-        userIpList.appendChild(userList);
-    }
-
-    function toggleAdminPanel() {
-        adminPanelContainer.style.display = (adminPanelContainer.style.display === 'none') ? 'block' : 'none';
-    }
-
-    function obtenerDireccionIP() {
-        // En un entorno real, debes utilizar un servicio externo para obtener la IP del usuario.
-        // Este es solo un ejemplo simplificado.
-        return '191.95.134.122';
-    }
-
-    function agregarIP() {
-        var ipInput = document.getElementById('ip-address');
-        var newIP = ipInput.value.trim();
-
-        if (newIP !== '' && !allowedIPs.includes(newIP)) {
-            allowedIPs.push(newIP);
-            ipInput.value = '';
-            mostrarUsuarios();
-        }
-    }
-
-    function mostrarUsuarios() {
-        var userList = allowedIPs.map(function (ip) {
-            return '<li>' + ip + '</li>';
-        }).join('');
-        ipList.innerHTML = userList;
-    }
-
-    function mostrarCreditos() {
-        creditsPanel.style.display = 'block';
-    }
-
-    function toggleComments() {
-        commentsContainer.style.display = (commentsContainer.style.display === 'none') ? 'block' : 'none';
-    }
-
-    function publicarComentario() {
-        var nameInput = document.getElementById('comment-name');
-        var textArea = document.getElementById('comment-text');
-
-        var name = nameInput.value.trim();
-        var comment = textArea.value.trim();
-
-        if (name !== '' && comment !== '') {
-            var commentItem = document.createElement('li');
-            commentItem.textContent = name + ': ' + comment;
-            commentsContainer.appendChild(commentItem);
-
-            // Limpiar los campos del formulario
-            nameInput.value = '';
-            textArea.value = '';
-        }
-    }
-
-    function toggleCreditsPanel() {
-        creditsPanel.style.display = (creditsPanel.style.display === 'none') ? 'block' : 'none';
-    }
-
-    // Funciones para hacer la ventana modal arrastrable
-    var isDragging = false;
-    var offset = { x: 0, y: 0 };
-
-    function startDragging(e) {
-        isDragging = true;
-        offset = { x: e.clientX - adminPanelContainer.offsetLeft, y: e.clientY - adminPanelContainer.offsetTop };
-    }
-
-    function stopDragging() {
-        isDragging = false;
-    }
-
-    document.addEventListener('mousemove', function (e) {
-        if (isDragging) {
-            adminPanelContainer.style.left = (e.clientX - offset.x) + 'px';
-            adminPanelContainer.style.top = (e.clientY - offset.y) + 'px';
-        }
-    });
+    // JavaScript y funciones aquí...
 </script>
 
 </body>
-</html> 
+</html>
